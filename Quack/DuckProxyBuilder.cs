@@ -172,7 +172,13 @@ namespace Quack
         {
             var flags = BindingFlags.Public | BindingFlags.Instance;
             var memberTypeMask = MemberTypes.Method | MemberTypes.Property | MemberTypes.Event;
-            Func<MemberInfo, bool> filter = m => (m.MemberType | memberTypeMask) != 0;
+            Func<MemberInfo, bool> filter = m =>
+                                            {
+                                                var method = m as MethodInfo;
+                                                if (method != null && method.IsSpecialName)
+                                                    return false;
+                                                return (m.MemberType | memberTypeMask) != 0;
+                                            };
             var interfaceMembers = interfaceType.GetMembers(flags).Where(filter);
             var targetMembers = targetType.GetMembers(flags).Where(filter);
             return
