@@ -44,9 +44,12 @@ IFoo proxy = foo.DuckTypeAs<IFoo>();
 UseFoo(proxy)
 ```
 
+Quack dynamically generates a proxy type that implements `IFoo` by calling the corresponding members in `Foo`. For better performance, the proxy type is generated once and cached per interface/target type couple.
+
 **Disclaimer**: this is a *very* early version, isn't fully tested (far from it), and has a few limitations:
 
 - it can only duck-type to an interface, not an abstract class
 - events are not supported yet
 - the signatures in the interface and the target type have to match exactly
 - both the interface and the target type have to be public
+- because it uses `Reflection.Emit`, it doesn't work with all .NET framework versions (e.g. it won't work in a PCL or a Windows Store app)
